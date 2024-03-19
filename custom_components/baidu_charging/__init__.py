@@ -257,8 +257,8 @@ class ChargingStation:
         from homeassistant.components.sensor import SensorDeviceClass
         coordinator.add_converters(*[
             SensorConv('price', prop=f'tp_list.{idx}.total_price').with_option({
-                'unit': 'CNY',
                 'device_class': SensorDeviceClass.MONETARY,
+                'unit_of_measurement': 'CNY',
             }),
             Converter('time_period', prop=f'tp_list.{idx}.current_charge_fee.Time', parent='price'),
             Converter('electric_price', prop=f'tp_list.{idx}.current_charge_fee.MarketElecPrice', parent='price'),

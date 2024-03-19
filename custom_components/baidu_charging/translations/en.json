@@ -1,0 +1,51 @@
+{
+  "config": {
+    "flow_title": "配置集成",
+    "step": {
+      "user": {
+        "title": "开始配置",
+        "description": "{tip}",
+        "data": {
+          "api_key": "百度地图AK",
+          "region": "城市/区县",
+          "search": "分享链接",
+          "poi_uid": "充电站"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "该站点已存在"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "集成选项",
+        "description": "{tip}",
+        "data": {}
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "total_left": {
+        "name": "空闲桩"
+      },
+      "price": {
+        "name": "价格"
+      },
+      "park_info": {
+        "name": "停车信息"
+      },
+      "connector_status": {
+        "name": "充电桩",
+        "state": {
+          "fault": "不可用",
+          "idle": "空闲",
+          "occupied": "占用"
+        }
+      }
+    },
+    "binary_sensor": {}
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "domain": "baidu_charging",
+  "name": "百度充电站",
+  "after_dependencies": ["http"],
+  "codeowners": ["@al-one"],
+  "config_flow": true,
+  "documentation": "https://github.com/hasscc/baidu-charging",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/hasscc/baidu-charging/issues",
+  "requirements": [],
+  "version": "0.0.0"
+}

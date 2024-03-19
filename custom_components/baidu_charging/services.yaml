@@ -1,0 +1,7 @@
+update_data:
+  description: 更新数据
+  fields:
+    uid:
+      description: 百度地图位置ID
+      selector:
+        text:

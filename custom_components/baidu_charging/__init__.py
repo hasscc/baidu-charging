@@ -288,9 +288,9 @@ class ChargingStation:
         for lst in [data.get('fast') or [], data.get('slow') or []]:
             for conn in lst:
                 cid = conn.get('connector_id')
+                self.coordinator.data['connectors'][cid] = conn
                 if cid in self.coordinator.data['connectors']:
                     continue
-                self.coordinator.data['connectors'][cid] = conn
                 attr = f'connector_{cid[-6:]}'
                 self.coordinator.add_converters(*[
                     MapSensorConv(attr, prop=f'connectors.{cid}.status', map={

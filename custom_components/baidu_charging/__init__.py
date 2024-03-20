@@ -22,7 +22,7 @@ _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = 'baidu_charging'
 TITLE = '充电站'
-DEFAULT_INTERVAL = 120
+DEFAULT_INTERVAL = '120'
 API_BASE = 'https://charging.map.baidu.com/charge_service'
 CONF_POI_UID = 'poi_uid'
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0'

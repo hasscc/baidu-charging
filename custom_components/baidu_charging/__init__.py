@@ -63,6 +63,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     hass.data[DOMAIN]['latest_apikey'] = coordinator.data.get(CONF_API_KEY)
 
     await hass.config_entries.async_forward_entry_setups(entry, SUPPORTED_PLATFORMS)
+    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
+
+    return True
+
+async def async_reload_entry(hass: HomeAssistant, config_entry: ConfigEntry):
+    await hass.config_entries.async_reload(config_entry.entry_id)
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
+    await hass.config_entries.async_unload_platforms(entry, SUPPORTED_PLATFORMS)
+
+    coordinator = hass.data.get(entry.entry_id, {}).get('coordinator')
+    if isinstance(coordinator, DataUpdateCoordinator):
+        await coordinator.async_shutdown()
+    hass.data.pop(entry.entry_id, None)
 
     return True
 

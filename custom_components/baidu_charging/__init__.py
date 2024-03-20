@@ -113,6 +113,10 @@ class StateCoordinator(DataUpdateCoordinator):
             SensorConv('addr', prop='basic_info.addr', parent='park_info'),
             SensorConv('park_detail', prop='charge_connector_stat.park_info', parent='park_info'),
             SensorConv('park_extend', prop='charge_connector_stat.park_extend', parent='park_info'),
+            SensorConv('ground', prop='basic_info.ground', parent='park_info'),
+            SensorConv('public', prop='basic_info.public', parent='park_info'),
+            SensorConv('lat', prop='basic_info.lat', parent='park_info'),
+            SensorConv('lng', prop='basic_info.lng', parent='park_info'),
         ])
 
     def add_converter(self, conv: Converter):

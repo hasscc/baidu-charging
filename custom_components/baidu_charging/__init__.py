@@ -2,18 +2,19 @@ import logging
 import aiohttp
 import voluptuous as vol
 
-from datetime import timedelta
 from homeassistant.core import HomeAssistant, State, ServiceCall, SupportsResponse, callback
 from homeassistant.const import (
     Platform,
     CONF_NAME,
     CONF_API_KEY,
+    CONF_SCAN_INTERVAL,
     STATE_IDLE,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, CoordinatorEntity
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+import homeassistant.helpers.config_validation as cv
 
 from .converters.base import *
 
@@ -21,6 +22,7 @@ _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = 'baidu_charging'
 TITLE = '充电站'
+DEFAULT_INTERVAL = 120
 API_BASE = 'https://charging.map.baidu.com/charge_service'
 CONF_POI_UID = 'poi_uid'
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0'
@@ -83,14 +85,14 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
 
 class StateCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry):
+        self.entry = entry
         super().__init__(
             hass,
             _LOGGER,
             name=f'{entry.entry_id}-coordinator',
-            update_interval=timedelta(seconds=60),
+            update_interval=self.update_timedelta,
         )
         self.data = {}
-        self.entry = entry
         self.stations = {}
         self.entities = {}
         self.converters = []
@@ -147,6 +149,11 @@ class StateCoordinator(DataUpdateCoordinator):
     @property
     def api_key(self):
         return self.entry.data.get(CONF_API_KEY, '')
+
+    @property
+    def update_timedelta(self):
+        val = self.entry.data.get(CONF_SCAN_INTERVAL) or DEFAULT_INTERVAL
+        return cv.time_period(val)
 
     @property
     def entity_prefix(self):

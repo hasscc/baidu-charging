@@ -9,7 +9,8 @@
           "api_key": "百度地图AK",
           "region": "城市/区县",
           "search": "分享链接",
-          "poi_uid": "充电站"
+          "poi_uid": "充电站",
+          "scan_interval": "更新频率(秒)"
         }
       }
     },
@@ -22,7 +23,9 @@
       "init": {
         "title": "集成选项",
         "description": "{tip}",
-        "data": {}
+        "data": {
+          "scan_interval": "更新频率(秒)"
+        }
       }
     }
   },

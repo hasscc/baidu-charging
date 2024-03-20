@@ -17,7 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(hass, entry, async_add_entities):
     attrs = []
     coordinator = hass.data[entry.entry_id]['coordinator']
-    for conv in coordinator.converters.values():
+    for conv in coordinator.converters:
         if conv.parent or conv.domain != ENTITY_DOMAIN:
             continue
         attrs.append(conv.attr)

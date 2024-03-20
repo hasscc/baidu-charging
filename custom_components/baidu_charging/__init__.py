@@ -79,7 +79,7 @@ class StateCoordinator(DataUpdateCoordinator):
         self.entry = entry
         self.stations = {}
         self.entities = {}
-        self.converters = {}
+        self.converters = []
 
         from homeassistant.components.sensor import SensorStateClass
         self.add_converters(*[
@@ -120,7 +120,7 @@ class StateCoordinator(DataUpdateCoordinator):
         ])
 
     def add_converter(self, conv: Converter):
-        self.converters[conv.attr] = conv
+        self.converters.append(conv)
 
     def add_converters(self, *args: Converter):
         for conv in args:
@@ -219,7 +219,7 @@ class StateCoordinator(DataUpdateCoordinator):
     def decode(self, data: dict) -> dict:
         """Decode props for HASS."""
         payload = {}
-        for conv in self.converters.values():
+        for conv in self.converters:
             prop = conv.prop or conv.attr
             value = get_value(data, prop, None)
             if prop is None:
@@ -246,7 +246,7 @@ class StateCoordinator(DataUpdateCoordinator):
         attrs = {conv.attr}
         if conv.childs:
             attrs |= set(conv.childs)
-        attrs.update(c.attr for c in self.converters.values() if c.parent == conv.attr)
+        attrs.update(c.attr for c in self.converters if c.parent == conv.attr)
         return attrs
 
 class ChargingStation:
@@ -266,6 +266,10 @@ class ChargingStation:
             Converter('service_price', prop=f'tp_list.{idx}.current_charge_fee.MarketServicePrice', parent='price'),
             Converter('hundred_km_charge_fee', prop=f'tp_list.{idx}.hundred_km_charge_fee', parent='price'),
             Converter('list', prop=f'tp_list.{idx}.cf', parent='price'),
+            SensorConv('service_price', prop=f'tp_list.{idx}.current_charge_fee.MarketServicePrice').with_option({
+                'device_class': SensorDeviceClass.MONETARY,
+                'unit_of_measurement': 'CNY',
+            }),
         ])
 
     @property

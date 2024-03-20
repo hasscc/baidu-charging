@@ -42,8 +42,10 @@ async def async_setup(hass: HomeAssistant, hass_config):
             coordinator = hass.data.get(entry.entry_id, {}).get('coordinator')
             if not coordinator:
                 continue
-            return await coordinator.update_from_service(call)
-        return {'error': 'Not found'}
+            return await coordinator.async_update_station(uid)
+        if uid:
+            return await StateCoordinator.async_get_station(hass, uid)
+        return {'error': 'Entry not found'}
     hass.services.async_register(
         DOMAIN, 'update_status', update_status,
         schema=vol.Schema({}, extra=vol.ALLOW_EXTRA),
@@ -144,11 +146,6 @@ class StateCoordinator(DataUpdateCoordinator):
     @property
     def addr(self):
         return self.basic_info.get('addr', '')
-
-    async def update_from_service(self, call: ServiceCall):
-        data = call.data
-        await self.async_request_refresh()
-        return self.data
 
     async def _async_update_data(self):
         await self.async_update_station()

@@ -95,6 +95,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             basic_info = data.get('basic_info')
             if not basic_info:
                 self.context['tip'] = f'找不到该地址的充电站信息\n{result}'
+            elif not to_time_period(user_input.get(CONF_SCAN_INTERVAL)):
+                self.context['tip'] = '⚠️ 更新频率格式错误'
             else:
                 await self.async_set_unique_id(poi_uid)
                 self._abort_if_unique_id_configured()
@@ -115,7 +117,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # vol.Optional(CONF_REGION, default=user_input.get(CONF_REGION)): str,
             # vol.Optional(CONF_API_KEY, default=user_input.get(CONF_API_KEY, latest_apikey)): str,
             **schema,
-            vol.Required(CONF_SCAN_INTERVAL, default=user_input.get(CONF_SCAN_INTERVAL, DEFAULT_INTERVAL)): cv.time_period,
+            vol.Optional(CONF_SCAN_INTERVAL, default=user_input.get(CONF_SCAN_INTERVAL, DEFAULT_INTERVAL)): str,
         }
         return self.async_show_form(
             step_id='user',
@@ -135,10 +137,13 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         if user_input is None:
             user_input = {}
         if user_input:
-            self.hass.config_entries.async_update_entry(
-                self.config_entry, data={**self.config_entry.data, **user_input}
-            )
-            return self.async_create_entry(title='', data={})
+            if not to_time_period(user_input.get(CONF_SCAN_INTERVAL)):
+                self.context['tip'] = '⚠️ 更新频率格式错误'
+            else:
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry, data={**self.config_entry.data, **user_input}
+                )
+                return self.async_create_entry(title='', data={})
 
         defaults = {
             **self.config_entry.data,
@@ -150,7 +155,14 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id='init',
             data_schema=vol.Schema({
-                vol.Required(CONF_SCAN_INTERVAL, default=defaults.get(CONF_SCAN_INTERVAL, DEFAULT_INTERVAL)): cv.time_period,
+                vol.Optional(CONF_SCAN_INTERVAL, default=defaults.get(CONF_SCAN_INTERVAL, DEFAULT_INTERVAL)): str,
             }),
             description_placeholders={'tip': self.context.pop('tip', '')},
         )
+
+def to_time_period(val):
+    try:
+        val = cv.time_period(val or DEFAULT_INTERVAL)
+    except Exception:
+        val = None
+    return val

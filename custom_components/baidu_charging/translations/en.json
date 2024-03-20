@@ -35,7 +35,10 @@
         "name": "空闲桩"
       },
       "price": {
-        "name": "价格"
+        "name": "充电价格"
+      },
+      "service_price": {
+        "name": "服务费"
       },
       "park_info": {
         "name": "停车信息"

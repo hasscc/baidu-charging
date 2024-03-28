@@ -105,22 +105,6 @@ class StateCoordinator(DataUpdateCoordinator):
             }),
             SensorConv('dc_left', prop='charge_connector_stat.dc_left', parent='total_left'),
             SensorConv('ac_left', prop='charge_connector_stat.ac_left', parent='total_left'),
-            SensorConv('dc_total', prop='charge_connector_stat.dc_total', parent='total_left'),
-            SensorConv('dc_off', prop='charge_connector_stat.dc_off', parent='total_left'),
-            SensorConv('dc_fault', prop='charge_connector_stat.dc_fault', parent='total_left'),
-            SensorConv('dc_occu', prop='charge_connector_stat.dc_occu', parent='total_left'),
-            SensorConv('dc_min_power', prop='charge_connector_stat.dc_min_power', parent='total_left'),
-            SensorConv('dc_max_power', prop='charge_connector_stat.dc_max_pwer', parent='total_left'),
-            SensorConv('dc_power_text', prop='charge_connector_stat.dc_power_text', parent='total_left'),
-            SensorConv('dc_idle_predict', prop='charge_connector_stat.dc_idle_predict', parent='total_left'),
-            SensorConv('ac_total', prop='charge_connector_stat.ac_total', parent='total_left'),
-            SensorConv('ac_off', prop='charge_connector_stat.ac_off', parent='total_left'),
-            SensorConv('ac_fault', prop='charge_connector_stat.ac_fault', parent='total_left'),
-            SensorConv('ac_occu', prop='charge_connector_stat.ac_occu', parent='total_left'),
-            SensorConv('ac_min_power', prop='charge_connector_stat.ac_min_power', parent='total_left'),
-            SensorConv('ac_max_power', prop='charge_connector_stat.ac_max_power', parent='total_left'),
-            SensorConv('ac_power_text', prop='charge_connector_stat.ac_power_text', parent='total_left'),
-            SensorConv('ac_idle_predict', prop='charge_connector_stat.ac_idle_predict', parent='total_left'),
 
             SensorConv('park_info', prop='additional_info.park_current_info').with_option({
                 'icon': 'mdi:parking',
@@ -185,6 +169,31 @@ class StateCoordinator(DataUpdateCoordinator):
         data.update({
             'total_left': stat.get('dc_left', 0) + stat.get('ac_left', 0),
         })
+
+        if stat.get('dc_total') and not self.data.get('dc_exists'):
+            self.data['dc_exists'] = 1
+            self.add_converters(*[
+                SensorConv('dc_total', prop='charge_connector_stat.dc_total', parent='total_left'),
+                SensorConv('dc_off', prop='charge_connector_stat.dc_off', parent='total_left'),
+                SensorConv('dc_fault', prop='charge_connector_stat.dc_fault', parent='total_left'),
+                SensorConv('dc_occu', prop='charge_connector_stat.dc_occu', parent='total_left'),
+                SensorConv('dc_min_power', prop='charge_connector_stat.dc_min_power', parent='total_left'),
+                SensorConv('dc_max_power', prop='charge_connector_stat.dc_max_pwer', parent='total_left'),
+                SensorConv('dc_power_text', prop='charge_connector_stat.dc_power_text', parent='total_left'),
+                SensorConv('dc_idle_predict', prop='charge_connector_stat.dc_idle_predict', parent='total_left'),
+            ])
+        if stat.get('ac_total') and not self.data.get('ac_exists'):
+            self.data['ac_exists'] = 1
+            self.add_converters(*[
+                SensorConv('ac_total', prop='charge_connector_stat.ac_total', parent='total_left'),
+                SensorConv('ac_off', prop='charge_connector_stat.ac_off', parent='total_left'),
+                SensorConv('ac_fault', prop='charge_connector_stat.ac_fault', parent='total_left'),
+                SensorConv('ac_occu', prop='charge_connector_stat.ac_occu', parent='total_left'),
+                SensorConv('ac_min_power', prop='charge_connector_stat.ac_min_power', parent='total_left'),
+                SensorConv('ac_max_power', prop='charge_connector_stat.ac_max_power', parent='total_left'),
+                SensorConv('ac_power_text', prop='charge_connector_stat.ac_power_text', parent='total_left'),
+                SensorConv('ac_idle_predict', prop='charge_connector_stat.ac_idle_predict', parent='total_left'),
+            ])
 
         idx = -1
         for dat in data.get('tp_list', []):

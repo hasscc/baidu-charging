@@ -32,16 +32,48 @@
   "entity": {
     "sensor": {
       "total_left": {
-        "name": "空闲桩"
+        "name": "空闲桩",
+        "state_attributes": {
+          "total_left": {"name": "总空闲数"},
+          "dc_left": {"name": "快充空闲"},
+          "dc_total": {"name": "快充总数"},
+          "dc_off": {"name": "快充关闭"},
+          "dc_fault": {"name": "快充故障"},
+          "dc_occu": {"name": "快充占用"},
+          "dc_power_text": {"name": "快充功率"},
+          "dc_idle_predict": {"name": "快充预测"},
+          "ac_left": {"name": "慢充空闲"},
+          "ac_total": {"name": "慢充总数"},
+          "ac_off": {"name": "慢充关闭"},
+          "ac_fault": {"name": "慢充故障"},
+          "ac_occu": {"name": "慢充占用"},
+          "ac_power_text": {"name": "慢充功率"},
+          "ac_idle_predict": {"name": "慢充预测"}
+        }
       },
       "price": {
-        "name": "充电价格"
+        "name": "充电价格",
+        "state_attributes": {
+          "price": {"name": "充电价格"},
+          "electric_price": {"name": "电费"},
+          "service_price": {"name": "服务费"},
+          "time_period": {"name": "当前时间段"},
+          "list": {"name": "全部时间段"}
+        }
       },
       "service_price": {
         "name": "服务费"
       },
       "park_info": {
-        "name": "停车信息"
+        "name": "停车信息",
+        "state_attributes": {
+          "addr": {"name": "地址"},
+          "park_info": {"name": "停车信息"},
+          "park_detail": {"name": "停车说明"},
+          "public": {"name": "开放情况"},
+          "lat": {"name": "纬度"},
+          "lng": {"name": "经度"}
+        }
       },
       "connector_status": {
         "name": "充电桩",
@@ -49,6 +81,10 @@
           "fault": "不可用",
           "idle": "空闲",
           "occupied": "占用"
+        },
+        "state_attributes": {
+          "connector_name": {"name": "桩名称"},
+          "power": {"name": "功率"}
         }
       }
     },

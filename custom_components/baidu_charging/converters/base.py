@@ -102,3 +102,12 @@ class NumberSensorConv(SensorConv):
 @dataclass
 class MapSensorConv(MapConv, SensorConv):
     domain: Optional[str] = 'sensor'
+
+@dataclass
+class UpdateButtonConv(Converter):
+    domain: Optional[str] = 'button'
+
+    def encode(self, client: "Client", payload: dict, value: Any):
+        async def update(*args, **kwargs):
+            await client.async_update_station()
+        return update

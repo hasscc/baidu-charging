@@ -88,6 +88,11 @@
         }
       }
     },
-    "binary_sensor": {}
+    "binary_sensor": {},
+    "button": {
+      "update": {
+        "name": "更新状态"
+      }
+    }
   }
 }

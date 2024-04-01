@@ -5,6 +5,7 @@ import voluptuous as vol
 from homeassistant.core import HomeAssistant, State, ServiceCall, SupportsResponse, callback
 from homeassistant.const import (
     Platform,
+    EntityCategory,
     CONF_NAME,
     CONF_API_KEY,
     CONF_SCAN_INTERVAL,
@@ -28,6 +29,7 @@ CONF_POI_UID = 'poi_uid'
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0'
 
 SUPPORTED_PLATFORMS = [
+    Platform.BUTTON,
     Platform.BINARY_SENSOR,
     Platform.SENSOR,
 ]
@@ -117,6 +119,10 @@ class StateCoordinator(DataUpdateCoordinator):
             SensorConv('public', prop='basic_info.public', parent='park_info'),
             SensorConv('lat', prop='basic_info.lat', parent='park_info'),
             SensorConv('lng', prop='basic_info.lng', parent='park_info'),
+            UpdateButtonConv('update').with_option({
+                'icon': 'mdi:update',
+                'entity_category': EntityCategory.CONFIG,
+            }),
         ])
 
     def add_converter(self, conv: Converter):
